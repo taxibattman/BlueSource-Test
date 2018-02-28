@@ -18,6 +18,8 @@ public class Header {
 	@FindBy(xpath = "//li[contains(.,'Employees')]/a") private Link lnkEmployees;
 	@FindBy(xpath = "//a[contains(text(),'Project')]") private Link lnkProjemployees;
 	@FindBy(xpath = "//a[contains(text(),'Project')]//..//..//..//following-sibling::a") private Link lnkEmployeeSelector;
+	@FindBy(linkText = "Admin") private Link lnkAdmin;
+	@FindBy(linkText = "Role Types") private Link lnkRoleTypes;
 	
 	/**Constructor**/
 	public Header(OrasiDriver driver){
@@ -79,6 +81,17 @@ public class Header {
 		MessageCenter messageCenter = new MessageCenter(driver);
 		messageCenter.closeMessageCenter();
 		lnkLogout.click();		
+	}
+	
+	/**
+	 * This method navigates to Role Types page
+	 * @author Christopher Batts
+	 */
+	public void navigateRoleTypes() {
+		MessageCenter messageCenter = new MessageCenter(driver);
+		messageCenter.closeMessageCenter();
+		lnkAdmin.click();
+		lnkRoleTypes.click();
 	}
 
 }

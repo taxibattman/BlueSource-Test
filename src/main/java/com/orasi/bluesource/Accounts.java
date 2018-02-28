@@ -46,7 +46,19 @@ public class Accounts {
 	@FindBy(css = "div.btn.btn-secondary.btn-xs.quick-nav") private Button btnQuickNav;
 	@FindBy(xpath = "//a[contains(@ng-bind, 'n + 1')]") private List<Button> btnPages;
 	@FindBy(xpath = "//*[@id=\"project-list\"]/div/div[1]/div") private Button btnCloseQuickNav;
-
+	@FindBy(xpath = "//*[@id=\"accordion\"]/div/div[5]/div/button[1]") private Button btnNewProject;
+	@FindBy(id = "project_name") private Textbox txtProjectName;
+	@FindBy(id = "project_start_date") private Textbox txtProjectStart;
+	@FindBy(id = "project_end_date") private Textbox txtProjectEnd;
+	@FindBy(xpath = "//*[@id=\"new_project\"]/div[11]/input") private Button btnCreateProject;
+	@FindBy(xpath = "//*[@id=\"accordion\"]/div/div[13]/div/div[1]/button[1]") private Button btnNewRole;
+	@FindBy(xpath = "//*[@id=\"new_role\"]/div[1]/div/div") private Button btnBill;
+	@FindBy(id = "role_role_type_id") private Listbox lstRoleType;
+	@FindBy(id = "role_name") private Textbox txtRoleName;
+	@FindBy(id = "role_max_resources") private Textbox txtMaxResources;
+	@FindBy(xpath = "//*[@id=\"new_role\"]/div[11]/input") private Button btnCreateRole;
+	@FindBy(xpath = "//*[@id=\"panel_body_3\"]/div/div/table") private Webtable tblProjectRoles;
+	
 	/**Constructor**/
 	public Accounts(OrasiDriver driver){
 		this.driver = driver;
@@ -376,5 +388,81 @@ public class Accounts {
 		PageLoaded.isDomComplete(driver, 1);
 	}
 	
+	/**
+	 * Clicks on New Project, fills out required fields and submits form
+	 * 
+	 * @author Christopher Batts
+	 */
+	public void addProject() {
+		btnNewProject.click();
+		txtProjectName.sendKeys("New Project 1");
+		txtProjectStart.sendKeys("04062018");
+		txtProjectEnd.sendKeys("06042018");
+		btnCreateProject.click();
+	}
+	
+	/**
+	 * Clicks a project link in the projects table under an account.
+	 * 
+	 * @param String Name of project to select
+	 * @author Christopher Batts
+	 */
+	public void selectProject(String projName) {
+		PageLoaded.isDomComplete(driver, 5);
+		tblProjects.findElement(By.linkText(projName)).click();
+	}
+	
+	/**
+	 * Clicks the New Role button under a project
+	 * 
+	 * @author Christopher Batts
+	 */
+	public void clickNewRole() {
+		btnNewRole.click();
+	}
+	
+	/**
+	 * Clicks the Billable/Non-Billable toggle
+	 * 
+	 * @author Christopher Batts
+	 */
+	public void toggleBill() {
+		btnBill.click();
+	}
+	
+	/**
+	 * Checks state of Billable/Non-Billable toggle. Returns true if Billable is displayed, otherwise returns false.
+	 * 
+	 * @return Boolean 
+	 * @author Christopher Batts
+	 */
+	public boolean isBillOn() {
+		return !(btnBill.getAttribute("class").contains("off"));
+	}
+	
+	/**
+	 * Clicks the +New Role button, fills out required fields, and submits the form.
+	 * 
+	 * @author Christopher Batts
+	 */
+	public void createRole() {
+		clickNewRole();
+		if(isBillOn() == true) {
+			toggleBill();
+		}
+		lstRoleType.syncVisible(5);
+		lstRoleType.select("Project Manager");
+		txtMaxResources.sendKeys("25");
+		btnCreateRole.click();
+	}
+	
+	/**
+	 * Selects a role by link text from the Project Roles table
+	 * 
+	 * @param String Role name to be selected
+	 * @author Christopher Batts
+	 */
+	public void selectNewRole(String roleName) {
+		tblProjectRoles.findElement(By.linkText(roleName)).click();
+	}
 }
-
