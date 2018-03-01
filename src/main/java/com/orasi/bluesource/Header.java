@@ -18,6 +18,7 @@ public class Header {
 	@FindBy(xpath = "//li[contains(.,'Employees')]/a") private Link lnkEmployees;
 	@FindBy(xpath = "//a[contains(text(),'Project')]") private Link lnkProjemployees;
 	@FindBy(xpath = "//a[contains(text(),'Project')]//..//..//..//following-sibling::a") private Link lnkEmployeeSelector;
+	@FindBy(linkText = "Calendar") private Link lnkCalendar;
 	
 	/**Constructor**/
 	public Header(OrasiDriver driver){
@@ -79,6 +80,12 @@ public class Header {
 		MessageCenter messageCenter = new MessageCenter(driver);
 		messageCenter.closeMessageCenter();
 		lnkLogout.click();		
+	}
+	
+	public void navigateCalendar() {
+		MessageCenter messageCenter = new MessageCenter(driver);
+		messageCenter.closeMessageCenter();
+		lnkCalendar.click();
 	}
 
 }
