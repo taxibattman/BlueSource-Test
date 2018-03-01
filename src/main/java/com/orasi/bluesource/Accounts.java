@@ -58,6 +58,12 @@ public class Accounts {
 	@FindBy(id = "role_max_resources") private Textbox txtMaxResources;
 	@FindBy(xpath = "//*[@id=\"new_role\"]/div[11]/input") private Button btnCreateRole;
 	@FindBy(xpath = "//*[@id=\"panel_body_3\"]/div/div/table") private Webtable tblProjectRoles;
+	@FindBy(id = "filled_role_employee_id") private Listbox lstAssignEmployee;
+	@FindBy(xpath = "//*[@id=\"new_filled_role\"]/div[6]/input") private Button btnCreateFilledRole;
+	@FindBy(xpath = "//*[@id=\"project-list\"]/div/div[2]/ul") private Element elmQuickNavProjectList;
+	@FindBy(xpath = "//*[@id=\"accordion\"]/div/div[9]/div/h4/div/button") private Button btnProjectOptions;
+	@FindBy(xpath = "//*[@id=\"accordion\"]/div/div[9]/div/h4/div/ul") private Element elmProjectOptionList;
+	@FindBy(linkText = "Close Project") private Link lnkCloseProject;
 	
 	/**Constructor**/
 	public Accounts(OrasiDriver driver){
@@ -217,6 +223,7 @@ public class Accounts {
 	}
 	
 	public void clickAssignEmployee(){
+		PageLoaded.isDomComplete(driver, 5);
 		btnAssignEmployee.syncEnabled(5,true);
 		btnAssignEmployee.click();
 	}
@@ -351,6 +358,7 @@ public class Accounts {
 	 * @author Darryl Papke
 	 */
 	public void clickQuickNav() {
+		btnQuickNav.syncVisible(5);
 		btnQuickNav.click();
 	}
 
@@ -409,6 +417,7 @@ public class Accounts {
 	 */
 	public void selectProject(String projName) {
 		PageLoaded.isDomComplete(driver, 5);
+		tblProjects.findElement(By.linkText(projName)).syncVisible(5);
 		tblProjects.findElement(By.linkText(projName)).click();
 	}
 	
@@ -418,6 +427,7 @@ public class Accounts {
 	 * @author Christopher Batts
 	 */
 	public void clickNewRole() {
+		btnNewRole.syncVisible(5);
 		btnNewRole.click();
 	}
 	
@@ -427,6 +437,7 @@ public class Accounts {
 	 * @author Christopher Batts
 	 */
 	public void toggleBill() {
+		btnBill.syncVisible(5);
 		btnBill.click();
 	}
 	
@@ -464,5 +475,58 @@ public class Accounts {
 	 */
 	public void selectNewRole(String roleName) {
 		tblProjectRoles.findElement(By.linkText(roleName)).click();
+	}
+	
+	/**
+	 * Fills out employee assignment form and submits
+	 * 
+	 * @author Christopher Batts
+	 */
+	public void assignEmployeeToProject() {
+		lstAssignEmployee.syncVisible(5);
+		lstAssignEmployee.select("test 123");
+		btnCreateFilledRole.click();
+	}
+	
+	public boolean verifyNewProjectIsDisplayed(String projectName) {
+		boolean x = false;
+		try {
+			x = elmQuickNavProjectList.findElement(By.linkText(projectName)).isDisplayed();
+		} catch (Exception e){
+			return x;
+		}
+		return x;
+		
+	}
+	
+	/**
+	 * Clicks options drop down menu on a project page
+	 * 
+	 * @author Christopher Batts
+	 */
+	public void clickProjectOptions() {
+		btnProjectOptions.syncVisible(5);
+		btnProjectOptions.click();
+	}
+	
+	/**
+	 * Clicks 'Edit Project' link
+	 * 
+	 * @author Christopher Batts
+	 */
+	public void clickEditProject() {
+		elmProjectOptionList.findElement(By.partialLinkText("Edit Project")).syncVisible(5);
+		elmProjectOptionList.findElement(By.partialLinkText("Edit Project")).click();
+	}
+	
+	/**
+	 * Clicks 'Close Project' button
+	 * 
+	 * @author Christopher Batts
+	 */
+	public void closeProject() {
+		lnkCloseProject.syncVisible(5);
+		lnkCloseProject.click();
+		driver.switchTo().alert().accept();
 	}
 }

@@ -70,24 +70,37 @@ public class QuickNavProjectClose extends WebBaseTest{
     	accounts.createRole();
     	
     	TestReporter.logStep("Select newly created role");
+    	accounts.selectNewRole("Project Manager");
     	
+    	TestReporter.logStep("Click '+Assign Employee' button");
+    	accounts.clickAssignEmployee();
+    	accounts.assignEmployeeToProject();
     	
-    	TestReporter.logStep("Select an employee to fill the role");
+    	TestReporter.logStep("Click Quick Nav button");
+    	TestReporter.assertTrue(accounts.verifyQuickNavButtonIsVisible(), "Verify Quick Nav button appears");
+    	accounts.clickQuickNav();
+    	TestReporter.assertTrue(accounts.verifyQuickNavCloseButtonIsVisible(), "Verify Quick Nav opens and close button is displayed");
     	
+    	TestReporter.logStep("Verify newly created project is displayed in Quick Nav");
+    	TestReporter.assertTrue(accounts.verifyNewProjectIsDisplayed("New Project 1"), "Verify new project is displayed in Quick Nav");
     	
-    	TestReporter.logStep("");
+    	TestReporter.logStep("Navigate back to newly created project page");
+    	accounts.closeQuickNav();
+    	header.navigateAccounts();
+    	accounts.clickFirstAccountLink();
+    	accounts.selectProject("New Project 1");
     	
+    	TestReporter.logStep("Close the project");
+    	accounts.clickProjectOptions();
+    	accounts.clickEditProject();
+    	accounts.closeProject();
     	
-    	TestReporter.logStep("");
+    	TestReporter.logStep("Verify that project no longer displays in Quick Nav");
+    	TestReporter.assertTrue(accounts.verifyQuickNavButtonIsVisible(), "Verify Quick Nav button appears");
+    	accounts.clickQuickNav();
+    	TestReporter.assertTrue(accounts.verifyQuickNavCloseButtonIsVisible(), "Verify Quick Nav opens and close button is displayed");
+    	TestReporter.assertFalse(accounts.verifyNewProjectIsDisplayed("New Project 1"), "Verify new project is no longer displayed in Quick Nav");
     	
-    	
-    	TestReporter.logStep("");
-    	
-    	
-    	TestReporter.logStep("");
-    	
-    	
-    	TestReporter.logStep("");
     
     	
     }
