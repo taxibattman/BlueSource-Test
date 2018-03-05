@@ -7,6 +7,7 @@ import com.orasi.web.webelements.Button;
 import com.orasi.web.webelements.Checkbox;
 import com.orasi.web.webelements.Element;
 import com.orasi.web.webelements.Label;
+import com.orasi.web.webelements.Link;
 import com.orasi.web.webelements.Textbox;
 import com.orasi.web.webelements.Webtable;
 import com.orasi.web.webelements.impl.internal.ElementFactory;
@@ -20,6 +21,7 @@ public class EmployeePage {
 	@FindBy(xpath = "//button[@data-target='#modal_1']") Button btnEditGeneral;
 	@FindBy(xpath = "//div//a[contains(text(),'Deactivate Employee')]") Button btnDeactivateEmployee;
 	@FindBy(xpath = "//div[@class='panel-heading']//a[contains(text(),'Deactivate')]") Button btnDeactivate;
+	@FindBy(linkText = "Manage") private Link lnkManage;
 	
 	/**Constructor**/
 	public EmployeePage(OrasiDriver driver){
@@ -69,6 +71,10 @@ public class EmployeePage {
 	
 	public void clickDeactivate(){
 		btnDeactivate.click();
+	}
+	
+	public void clickManage() {
+		lnkManage.click();
 	}
 	
 }

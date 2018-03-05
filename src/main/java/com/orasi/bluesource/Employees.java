@@ -311,5 +311,9 @@ public class Employees {
 		}
 			
 	}
+	
+	public void clickManage() {
+		btnManage.click();
+	}
 
 }

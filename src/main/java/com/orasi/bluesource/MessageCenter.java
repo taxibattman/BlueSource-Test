@@ -28,6 +28,7 @@ public class MessageCenter {
 	@FindBy(xpath = "//*[@id='content']/div[2]/div[3]") private Label lblMessageTableHead;
 	@FindBy(xpath = "//*[@id='panel_body_2']/div/div/table") private Webtable tabMessageCenter;
 	@FindBy(tagName = "table") private Webtable tabByXpath;
+	@FindBy(xpath = "//*[@id=\"message_center\"]/div/div/div/div/div/div[3]/a[1]") private Link lnkApprove;
 	
 	/**Constructor**/
 	public MessageCenter(OrasiDriver driver){
@@ -164,6 +165,10 @@ public class MessageCenter {
 			System.out.println("No table is present");
 		
 		return count;
+	}
+	
+	public void clickApprove() {
+		lnkApprove.jsClick();
 	}
 	
 }

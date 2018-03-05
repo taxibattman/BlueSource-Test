@@ -6,7 +6,7 @@
 	<version>1.1.2</version>
 	<packaging>jar</packaging>
 	<properties>
-		<aspectj.version>1.8.5</aspectj.version>    
+		<aspectj.version>1.8.13</aspectj.version>    
 		<jenkinsBuildId>${env.BUILD_ID}</jenkinsBuildId>
 		<jenkinsBuildNumber>${env.BUILD_NUMBER}</jenkinsBuildNumber>
 		<jenkinsBuildTag>${env.BUILD_TAG}</jenkinsBuildTag>

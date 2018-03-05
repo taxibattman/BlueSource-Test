@@ -6,6 +6,7 @@ import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.support.FindBy;
 
 import com.orasi.web.OrasiDriver;
+import com.orasi.web.PageLoaded;
 import com.orasi.web.webelements.Link;
 import com.orasi.web.webelements.impl.internal.ElementFactory;
 
@@ -18,6 +19,7 @@ public class Header {
 	@FindBy(xpath = "//li[contains(.,'Employees')]/a") private Link lnkEmployees;
 	@FindBy(xpath = "//a[contains(text(),'Project')]") private Link lnkProjemployees;
 	@FindBy(xpath = "//a[contains(text(),'Project')]//..//..//..//following-sibling::a") private Link lnkEmployeeSelector;
+	@FindBy(partialLinkText = "Message Center") private Link lnkMessageCenter;
 	
 	/**Constructor**/
 	public Header(OrasiDriver driver){
@@ -78,7 +80,25 @@ public class Header {
 	public void navigateLogout() {
 		MessageCenter messageCenter = new MessageCenter(driver);
 		messageCenter.closeMessageCenter();
+		PageLoaded.isDomComplete(driver,5);
+		lnkLogout.syncVisible(5);
 		lnkLogout.click();		
+	}
+	
+	public void clickLogout() {
+		PageLoaded.isDomComplete(driver, 5);
+		lnkLogout.syncVisible(5);
+		lnkLogout.click();
+	}
+	
+	public void clickMessageCenter() {
+		lnkMessageCenter.syncVisible(5);
+		lnkMessageCenter.jsClick();
+	}
+	
+	public void clickEmployees() {
+		lnkEmployees.syncVisible(5);
+		lnkEmployees.jsClick();
 	}
 
 }

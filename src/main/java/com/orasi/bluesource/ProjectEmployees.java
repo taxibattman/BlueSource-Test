@@ -21,7 +21,7 @@ public class ProjectEmployees {
 	private ResourceBundle userCredentialRepo = ResourceBundle.getBundle(Constants.USER_CREDENTIALS_PATH);
 	
 	/**Page Elements**/
-	
+	@FindBy(xpath = "//*[@id=\"content\"]/table") private Webtable tblProjectEmployees;
 		
 	/**Constructor**/
 	public ProjectEmployees(OrasiDriver driver){
@@ -41,6 +41,19 @@ public class ProjectEmployees {
 			return false;
 		}
 		
+	}
+	
+	/**
+	 * Selects an employee from the ProjectEmployees table by the employee's name.
+	 * 
+	 * @param String employeeName
+	 * @author Christopher Batts
+	 */
+	public void selectEmployee(String employeeName) {
+		int row = tblProjectEmployees.getRowWithCellText(employeeName);
+		int column = tblProjectEmployees.getColumnWithCellText(employeeName, row);
+		
+		tblProjectEmployees.getCell(row, column).findElement(By.linkText(employeeName)).click();
 	}
 	
 }
