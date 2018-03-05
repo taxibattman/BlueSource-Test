@@ -5,6 +5,7 @@ import java.util.ResourceBundle;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.FindBy;
 
 import com.orasi.utils.Constants;
@@ -56,7 +57,6 @@ public class ReportedTimesSummary {
 //		PageLoaded.isDomComplete(driver, 5);
 		btnSubmitTimeSheet.syncVisible(5,true);
 		btnSubmitTimeSheet.jsClick();
-		System.out.println("bloop");
 	}
 	
 	public void fillTimeSheet() {
@@ -87,8 +87,14 @@ public class ReportedTimesSummary {
 		int row = tblTimeSheetSubTable.getRowWithCellText(role);
 		int column = tblTimeSheetSubTable.getColumnWithCellText("Approved");
 		
-		tblTimeSheetSubTable.getCell(row, column).findElement(By.linkText("Approved")).focus();
-		return tblTimeSheetSubTable.findElement(By.xpath("//*[@id=\"content\"]/div[6]/table/tbody/tr[3]/td/table/tbody/tr[2]/td[11]/div[2]/div[2]")).isDisplayed();
+		Actions action = new Actions(driver);
+		WebElement x = tblTimeSheetSubTable.getCell(row, column);
+		WebElement y = x.findElement(By.xpath("//div[@class = 'approval-status underline']"));
+		WebElement z = tblTimeSheetSubTable.findElement(By.xpath("//div[@class = 'tooltip fade top in']"));
+		action.moveToElement(y).pause(5).moveToElement(z).pause(5).build().perform();
+		
+		
+		return tblTimeSheetSubTable.findElement(By.xpath("//div[@class = 'tooltip fade top in']")).isDisplayed();
 	}
 	
 }
