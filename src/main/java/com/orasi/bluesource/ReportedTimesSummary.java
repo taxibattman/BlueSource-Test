@@ -32,6 +32,13 @@ public class ReportedTimesSummary {
 	@FindBy(xpath = "//select[@id = 'flavor']") private Listbox lstNonBillType;
 	@FindBy(xpath = "//*[@id=\"edit_employee_252\"]/div[4]/input[2]") private Button btnSubmitTimeSheet; 
 	@FindBy(xpath = "//*[@id=\"content\"]/div[6]/table/tbody/tr[3]/td/table") private Webtable tblTimeSheetSubTable;
+	@FindBy(css = "span.approval-section.edit-icon.glyphicon.glyphicon-pencil") private Button btnEdit;
+	@FindBy(xpath = "//*[@id=\"edit_employee_260\"]/div[2]") private Button btnAddNonBill;
+	@FindBy(id = "comment") private Textbox txtComment;
+	@FindBy(xpath = "//div[@class = 'btn btn-primary btn-xs submit-comment']") private Button btnSubmitComment;
+	@FindBy(xpath = "//input[@class = 'time-entry-btn time-entry-save-button btn btn-default btn-sm']") private Button btnSave;
+	@FindBy(xpath = "//input[@class = 'time-entry-btn time-entry-submit-button btn btn-primary btn-sm']") private Button btnSubmit;
+	
 	
 	/**Constructor**/
 	public ReportedTimesSummary(OrasiDriver driver){
@@ -66,14 +73,15 @@ public class ReportedTimesSummary {
 		}catch (Exception e) {
 			System.out.println("Element not found");
 		}
-		lstNonBillType.select("Bench");
 		List<Element> entryFields = tblTimeEntry.findElements(By.xpath("//input[contains(@class, 'time-entry-hour-fields')]"));
 		int count = 0;
 		for(WebElement x : entryFields) {
 			count ++; 
-			if(count < 6 && x.isEnabled()) {
+			if(count == 11 && x.isEnabled()) {
 				 x.sendKeys("8");
-			 }	 
+				 x.click();
+				 txtComment.sendKeys("update");
+			}	 
 		}
 	}
 	/**
@@ -97,4 +105,51 @@ public class ReportedTimesSummary {
 		return tblTimeSheetSubTable.findElement(By.xpath("//div[@class = 'tooltip fade top in']")).isDisplayed();
 	}
 	
+	public void clickEdit() {
+		btnEdit.syncVisible(5);
+		btnEdit.jsClick();
+	}
+	
+	public void clickAddNonBill() {
+		btnAddNonBill.syncVisible(5);
+		btnAddNonBill.click();
+	}
+	
+	/**
+	 * Determines whether an option is in the Non-bill type based the role name.
+	 * @param roleName String the name of the role being searched for
+	 * @return boolean Returns true if match is found, false otherwise.
+	 * @author Christopher Batts
+	 */
+	
+	public boolean verifyNonBillOption(String roleName) {
+		List<WebElement> eList = lstNonBillType.getOptions();
+		for(WebElement elem : eList) {
+			if(elem.getText().equals(roleName)) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	/**
+	 * Selects a Non-bill type based the role name.
+	 * @param roleName String the name of the role to select
+	 * @author Christopher Batts
+	 */
+	public void selectNonBillOption(String roleName) {
+		lstNonBillType.select(roleName);
+	}
+	
+	public void submitComment() {
+		btnSubmitComment.click();
+	}
+	
+	public void clickSave() {
+		btnSave.jsClick();
+	}
+	
+	public void clickSubmit() {
+		btnSubmit.jsClick();
+	}
 }
