@@ -9,7 +9,6 @@ import org.openqa.selenium.OutputType;
 import org.openqa.selenium.Point;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.interactions.internal.Coordinates;
 import org.openqa.selenium.internal.Locatable;
 import org.openqa.selenium.internal.WrapsElement;
 import org.openqa.selenium.support.FindBy;
@@ -25,7 +24,6 @@ import com.orasi.web.webelements.impl.internal.ImplementedBy;
 @ImplementedBy(ElementImpl.class)
 public interface Element extends WebElement, WrapsElement, Locatable {
 
-	
     /**
      * @author Justin
      * @see main.java.com.orasi.core.interfaces.impl.ElementImpl#clear()
@@ -108,6 +106,16 @@ public interface Element extends WebElement, WrapsElement, Locatable {
     @SuppressWarnings("unchecked")
     @Override
     Element findElement(By by);
+    
+    /**
+     * @author John Martin
+     * @param by
+     *            - Search for specified {@link By} location and return it's
+     *            {@link WebElement}
+     * @return {@link WebElement}
+     * @see main.java.com.orasi.core.interfaces.impl.ElementImpl#findWebElement()
+     */
+    WebElement findWebElement(By by);
 
     /**
      * @author Justin
@@ -117,9 +125,19 @@ public interface Element extends WebElement, WrapsElement, Locatable {
      * @return {@link List}
      * @see main.java.com.orasi.core.interfaces.impl.ElementImpl#findElements()
      */
-    @SuppressWarnings({ "unchecked", "rawtypes" })
+    @SuppressWarnings({ "unchecked" })
     @Override
-    List<WebElement> findElements(By by);
+    List<Element> findElements(By by);
+    
+    /**
+     * @author John Martin
+     * @param by
+     *            - Search for specified {@link By} location and return all
+     *            web elements found in a {@link List}
+     * @return {@link List}
+     * @see main.java.com.orasi.core.interfaces.impl.ElementImpl#findElements()
+     */
+    List<WebElement> findWebElements(By by);
 
     /**
      * @author Justin
@@ -143,13 +161,6 @@ public interface Element extends WebElement, WrapsElement, Locatable {
      */
     @Override
     String getCssValue(String propertyName);
-
-    /**
-     * @return {@link Coordinates}
-     * @see org.orasi.chameleon.interfaces.impl.ElementImpl#getCoordinates();
-     */
-    @Override
-    Coordinates getCoordinates();
 
     /**
      * @author Justin

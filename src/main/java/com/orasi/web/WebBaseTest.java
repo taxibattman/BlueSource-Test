@@ -343,7 +343,7 @@ public class WebBaseTest extends BaseTest {
         setTestName(testName);
         driverSetup();
         // launch the application under test normally
-        if (pageUrl.isEmpty()) {
+        if (getPageURL() == null || getPageURL().isEmpty()) {
             launchApplication();
             // Otherwise if you have a specific page you want the test to start from
         } else {
