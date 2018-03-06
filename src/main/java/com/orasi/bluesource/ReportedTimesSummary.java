@@ -1,5 +1,8 @@
 package com.orasi.bluesource;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.Iterator;
 import java.util.List;
 import java.util.ResourceBundle;
 
@@ -95,6 +98,44 @@ public class ReportedTimesSummary {
 		
 		
 		return tblTimeSheetSubTable.findElement(By.xpath("//div[@class = 'tooltip fade top in']")).isDisplayed();
+	}
+	//TODO
+	public boolean verifyTotalHours() {
+		LocalDate date = LocalDateTime.now().toLocalDate();
+		String today = date.getMonthValue()+"/"+date.getDayOfMonth();
+		
+		Webtable tblSubTimeSheets = driver.findWebtable(By.xpath("//div[contains(text(),'"+today+"')]/../../../../.."));
+
+		int col = tblSubTimeSheets.getColumnWithCellText(today, 2);
+		
+		int totalRow = tblSubTimeSheets.getRowWithCellText("Total:");
+		
+		
+		List<Element> dateHours = tblSubTimeSheets.findElements(By.xpath("//div[contains(text(),'"+today+"')]/.."));
+		double total = 0;
+		double hour = 0;
+		for (Element element : dateHours) {
+			String text = element.getText();
+			if(text.contains("\n")) {
+				int b = text.indexOf("\n");
+				text = text.substring(0, b);
+				hour = Double.parseDouble(text);
+				total = total + hour;
+			} else {
+				hour = 0;
+				total = total + hour;
+			}	
+		}
+		
+		String tot = Double.toString(total);
+		
+		
+		int totalCol = tblSubTimeSheets.getColumnWithCellText(tot, totalRow);
+		
+			if(tblSubTimeSheets.getCellData(totalRow, totalCol).equals(tot)) {	
+			return true;
+		}
+			return false;
 	}
 	
 }
