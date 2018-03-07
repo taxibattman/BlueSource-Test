@@ -399,15 +399,6 @@ public class Accounts<E> {
 		PageLoaded.isDomComplete(driver, 1);
 	}
 	
-	public String reformatDate(String oldDate) {
-		String year = oldDate.substring(0, 4);
-		String month = oldDate.substring(5, 7);
-		String day = oldDate.substring(8);
-				
-		String newDate = month+"/"+day+"/"+year;
-		return newDate;
-	}
-	
 	/**
 	 * Clicks on New Project, fills out required fields and submits form
 	 * 
@@ -468,7 +459,7 @@ public class Accounts<E> {
 	 * @author Christopher Batts
 	 */
 	public boolean isBillOn() {
-		return !(btnBill.getAttribute("class").contains("off"));
+		return btnBill.getAttribute("class").contains("primary");
 	}
 	
 	/**
@@ -503,11 +494,12 @@ public class Accounts<E> {
 	/**
 	 * Fills out employee assignment form and submits
 	 * 
+	 * @param name String, Name of employee to assign to project
 	 * @author Christopher Batts
 	 */
-	public void assignEmployeeToProject() {
+	public void assignEmployeeToProject(String name) {
 		lstAssignEmployee.syncVisible(5);
-		lstAssignEmployee.select("test 123");
+		lstAssignEmployee.select(name);
 		btnCreateFilledRole.click();
 	}
 	

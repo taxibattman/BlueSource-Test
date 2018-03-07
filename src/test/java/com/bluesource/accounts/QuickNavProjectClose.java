@@ -74,7 +74,7 @@ public class QuickNavProjectClose extends WebBaseTest{
     	
     	TestReporter.logStep("Click '+Assign Employee' button");
     	accounts.clickAssignEmployee();
-    	accounts.assignEmployeeToProject();
+    	accounts.assignEmployeeToProject("test 123");
     	
     	TestReporter.logStep("Click Quick Nav button");
     	TestReporter.assertTrue(accounts.verifyQuickNavButtonIsVisible(), "Verify Quick Nav button appears");
