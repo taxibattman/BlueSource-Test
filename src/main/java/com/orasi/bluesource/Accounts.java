@@ -46,7 +46,9 @@ public class Accounts {
 	@FindBy(css = "div.btn.btn-secondary.btn-xs.quick-nav") private Button btnQuickNav;
 	@FindBy(xpath = "//a[contains(@ng-bind, 'n + 1')]") private List<Button> btnPages;
 	@FindBy(xpath = "//*[@id=\"project-list\"]/div/div[1]/div") private Button btnCloseQuickNav;
-
+	@FindBy(xpath = "//*[@id=\"accordion\"]/div/div[13]/div/div[1]/button[1]") private Button btnNewRole;
+	@FindBy(xpath = "//*[@id=\"new_role\"]/div[1]/div/div/div") private Element elmBillToggle;
+	
 	/**Constructor**/
 	public Accounts(OrasiDriver driver){
 		this.driver = driver;
@@ -375,6 +377,12 @@ public class Accounts {
 		tblAccounts.clickCell(row, column);
 		PageLoaded.isDomComplete(driver, 1);
 	}
+
+	public void clickNewRole() {
+		btnNewRole.syncVisible(5);
+		btnNewRole.click();
+	}
+	
 	
 }
 
