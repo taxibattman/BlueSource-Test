@@ -63,17 +63,14 @@ public class RateIsLessThanBaseRateNotification extends WebBaseTest{
     	
     	
     	TestReporter.logStep("Click '+New Role' button. Select a billable role. Input a rate lower than base rate. Verify Alert is displayed");
-    	accounts.verifyLowRateAlert("Automation Test Engineer (SAP)");
     	
-    	
-    	
-    	
+    	TestReporter.assertTrue(accounts.verifyLowRateAlert("Automation Test Engineer (SAP)",25),"Verify low rate alert is displayed");
     	
     	TestReporter.logStep("Close pop up");
-    	
+    	accounts.closeAddRolePopup();
     	
     	TestReporter.logStep("Logout of BlueSource");
-    	
+    	header.clickLogout();
     	
     	
     	
