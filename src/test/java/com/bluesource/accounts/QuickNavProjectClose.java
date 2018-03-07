@@ -58,16 +58,16 @@ public class QuickNavProjectClose extends WebBaseTest{
     	header.navigateAccounts();
     	
     	TestReporter.logStep("click on an account");
-    	accounts.clickFirstAccountLink();
+    	accounts.clickAccountLink("Basic Account");
    
     	TestReporter.logStep("Click New Project button, fill out form, and submit");
-    	accounts.addProject();
+    	accounts.addProject("New Project 1", "08182018", "08182019");
     	
     	TestReporter.logStep("Select newly created project from Account overview page");
     	accounts.selectProject("New Project 1");
     	
     	TestReporter.logStep("Add a new role to the project");
-    	accounts.createRole();
+    	accounts.createRole("Project Manager", 25);
     	
     	TestReporter.logStep("Select newly created role");
     	accounts.selectNewRole("Project Manager");
@@ -87,7 +87,7 @@ public class QuickNavProjectClose extends WebBaseTest{
     	TestReporter.logStep("Navigate back to newly created project page");
     	accounts.closeQuickNav();
     	header.navigateAccounts();
-    	accounts.clickFirstAccountLink();
+    	accounts.clickAccountLink("Basic Account");
     	accounts.selectProject("New Project 1");
     	
     	TestReporter.logStep("Close the project");
