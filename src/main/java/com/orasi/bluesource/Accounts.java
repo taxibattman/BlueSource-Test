@@ -46,7 +46,7 @@ public class Accounts {
 	@FindBy(css = "div.btn.btn-secondary.btn-xs.quick-nav") private Button btnQuickNav;
 	@FindBy(xpath = "//a[contains(@ng-bind, 'n + 1')]") private List<Button> btnPages;
 	@FindBy(xpath = "//*[@id=\"project-list\"]/div/div[1]/div") private Button btnCloseQuickNav;
-	@FindBy(xpath = "//*[@id=\"accordion\"]/div/div[13]/div/div[1]/button[1]") private Button btnNewRole;
+	@FindBy(xpath = "//button[contains(text(),'New Role')]") private Button btnNewRole;
 	@FindBy(xpath = "//*[@id=\"new_role\"]/div[1]/div/div/div") private Element elmBillToggle;
 	@FindBy(id = "select2-role_role_type_id-container") private Listbox lstRoleType;
 	@FindBy(id = "role_max_resources") private Textbox txtMaxResources;
