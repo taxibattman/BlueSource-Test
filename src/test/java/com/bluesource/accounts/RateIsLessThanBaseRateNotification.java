@@ -65,6 +65,8 @@ public class RateIsLessThanBaseRateNotification extends WebBaseTest{
     	TestReporter.logStep("Click '+New Role' button");
     	accounts.clickNewRole();
     	
+    	accounts.verifyLowRateAlert();
+    	
     	TestReporter.logStep("Select a billable role");
     	
     	

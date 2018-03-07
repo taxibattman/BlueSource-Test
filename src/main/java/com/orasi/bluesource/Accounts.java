@@ -48,6 +48,10 @@ public class Accounts {
 	@FindBy(xpath = "//*[@id=\"project-list\"]/div/div[1]/div") private Button btnCloseQuickNav;
 	@FindBy(xpath = "//*[@id=\"accordion\"]/div/div[13]/div/div[1]/button[1]") private Button btnNewRole;
 	@FindBy(xpath = "//*[@id=\"new_role\"]/div[1]/div/div/div") private Element elmBillToggle;
+	@FindBy(id = "select2-role_role_type_id-container") private Listbox lstRoleType;
+	@FindBy(id = "role_max_resources") private Textbox txtMaxResources;
+	@FindBy(xpath = "//*[@id=\"new_role\"]/div[11]/input") private Button btnCreateRole;
+	@FindBy(xpath = "//*[@id=\"role_budget_rate\"]") private Textbox txtRate;
 	
 	/**Constructor**/
 	public Accounts(OrasiDriver driver){
@@ -378,11 +382,81 @@ public class Accounts {
 		PageLoaded.isDomComplete(driver, 1);
 	}
 
+	/**
+	 * Clicks the New Role button under a project
+	 * 
+	 * @author Christopher Batts
+	 */
 	public void clickNewRole() {
 		btnNewRole.syncVisible(5);
 		btnNewRole.click();
 	}
 	
+	/**
+	 * Clicks the Billable/Non-Billable toggle
+	 * 
+	 * @author Christopher Batts
+	 */
+	public void toggleBill() {
+		elmBillToggle.syncVisible(5);
+		elmBillToggle.click();
+	}
 	
+	/**
+	 * Checks state of Billable/Non-Billable toggle. Returns true if Billable is displayed, otherwise returns false.
+	 * 
+	 * @return Boolean 
+	 * @author Christopher Batts
+	 */
+	public boolean isBillOn() {
+		return !(elmBillToggle.getAttribute("class").contains("off"));
+	}
+	
+	/**
+	 * Clicks the +New Role button, fills out required fields, and submits the form.
+	 * 
+	 * @author Christopher Batts
+	 */
+	public void createNonBillableRole() {
+		clickNewRole();
+		if(isBillOn() == true) {
+			toggleBill();
+		}
+		lstRoleType.syncVisible(5);
+		lstRoleType.select("Project Manager");
+		txtMaxResources.sendKeys("25");
+		btnCreateRole.click();
+	}
+	
+	/**
+	 * Clicks the +New Role button, fills out required fields, and submits the form.
+	 * 
+	 * @author Christopher Batts
+	 */
+	public void createBillableRole() {
+		clickNewRole();
+		if(isBillOn() == false) {
+			toggleBill();
+		}
+		lstRoleType.syncVisible(5);
+		lstRoleType.select("Automation Test Engineer (SAP)");
+		txtMaxResources.sendKeys("25");
+		btnCreateRole.click();
+	}
+	
+	public boolean verifyLowRateAlert() {
+		clickNewRole();
+		if(isBillOn() == false) {
+			toggleBill();
+		}
+		lstRoleType.syncVisible(5);
+		lstRoleType.select("Automation Test Engineer (SAP)");
+		
+		Element baseRate = driver.findElement(By.id("base_rate"));
+		String rate = baseRate.getText();
+		System.out.println(rate);
+		
+		return true;
+	}
 }
 
