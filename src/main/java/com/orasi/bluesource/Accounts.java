@@ -47,10 +47,10 @@ public class Accounts {
 	@FindBy(xpath = "//a[contains(@ng-bind, 'n + 1')]") private List<Button> btnPages;
 	@FindBy(xpath = "//*[@id=\"project-list\"]/div/div[1]/div") private Button btnCloseQuickNav;
 	@FindBy(xpath = "//button[contains(text(),'New Role')]") private Button btnNewRole;
-	@FindBy(xpath = "//*[@id=\"new_role\"]/div[1]/div/div/div") private Element elmBillToggle;
-	@FindBy(id = "select2-role_role_type_id-container") private Listbox lstRoleType;
+	@FindBy(xpath = "//div[@data-toggle='toggle']") private Element elmBillToggle;
+	@FindBy(id = "role_role_type_id") private Listbox lstRoleType;
 	@FindBy(id = "role_max_resources") private Textbox txtMaxResources;
-	@FindBy(xpath = "//*[@id=\"new_role\"]/div[11]/input") private Button btnCreateRole;
+	@FindBy(xpath = "//input[@value='Create Role']") private Button btnCreateRole;
 	@FindBy(xpath = "//*[@id=\"role_budget_rate\"]") private Textbox txtRate;
 	
 	/**Constructor**/
@@ -388,7 +388,7 @@ public class Accounts {
 	 * @author Christopher Batts
 	 */
 	public void clickNewRole() {
-		btnNewRole.syncVisible(5);
+		btnNewRole.syncVisible(5,true);
 		btnNewRole.click();
 	}
 	
@@ -409,53 +409,75 @@ public class Accounts {
 	 * @author Christopher Batts
 	 */
 	public boolean isBillOn() {
-		return !(elmBillToggle.getAttribute("class").contains("off"));
+		return elmBillToggle.getAttribute("class").contains("primary");
 	}
 	
+
 	/**
 	 * Clicks the +New Role button, fills out required fields, and submits the form.
 	 * 
+	 * @param roleType String, name of role to select from list
+	 * @param maxResources Integer, less than of equal to 30
+	 * 
 	 * @author Christopher Batts
 	 */
-	public void createNonBillableRole() {
+	public void createNonBillableRole(String roleType, int maxResources) {
 		clickNewRole();
 		if(isBillOn() == true) {
 			toggleBill();
-		}
+		}	
 		lstRoleType.syncVisible(5);
-		lstRoleType.select("Project Manager");
-		txtMaxResources.sendKeys("25");
+		lstRoleType.select(roleType);
+		txtMaxResources.sendKeys(Integer.toString(maxResources));
 		btnCreateRole.click();
 	}
 	
+
 	/**
 	 * Clicks the +New Role button, fills out required fields, and submits the form.
 	 * 
+	 * @param roleType String, name of role to select from list
+	 * @param maxResources Integer, less than of equal to 30
+	 * 
 	 * @author Christopher Batts
 	 */
-	public void createBillableRole() {
+	public void createBillableRole(String roleType, int maxResources) {
 		clickNewRole();
 		if(isBillOn() == false) {
 			toggleBill();
-		}
+		}	
 		lstRoleType.syncVisible(5);
-		lstRoleType.select("Automation Test Engineer (SAP)");
-		txtMaxResources.sendKeys("25");
+		lstRoleType.select(roleType);
+		txtMaxResources.sendKeys(Integer.toString(maxResources));
 		btnCreateRole.click();
 	}
 	
-	public boolean verifyLowRateAlert() {
+	
+	/**
+	 * Verifies an alert is present when entered rate is lower than base rate for a role type
+	 * 
+	 * @param roleType String, name of role to select from list
+	 * @return boolean, returns true if alert is present, returns false otherwise.
+	 */
+	public boolean verifyLowRateAlert(String roleType) {
 		clickNewRole();
 		if(isBillOn() == false) {
 			toggleBill();
+			elmBillToggle.syncAttributeContainsValue("class", "primary", 5);
+			lstRoleType.syncVisible(5);
+			lstRoleType.select(roleType);
+		
+			Element baseRate = driver.findElement(By.id("base_rate"));
+			String rate = baseRate.getText();
+			System.out.println(rate);
+		} else {
+			lstRoleType.syncVisible(5);
+			lstRoleType.select(roleType);
+		
+			Element baseRate = driver.findElement(By.id("base_rate"));
+			String rate = baseRate.getText();
+			System.out.println(rate);
 		}
-		lstRoleType.syncVisible(5);
-		lstRoleType.select("Automation Test Engineer (SAP)");
-		
-		Element baseRate = driver.findElement(By.id("base_rate"));
-		String rate = baseRate.getText();
-		System.out.println(rate);
-		
 		return true;
 	}
 }
