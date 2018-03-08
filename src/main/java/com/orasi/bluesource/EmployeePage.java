@@ -1,5 +1,8 @@
 package com.orasi.bluesource;
 
+import java.util.List;
+
+import org.openqa.selenium.By;
 import org.openqa.selenium.support.FindBy;
 
 import com.orasi.web.OrasiDriver;
@@ -21,7 +24,16 @@ public class EmployeePage {
 	@FindBy(xpath = "//button[@data-target='#modal_1']") Button btnEditGeneral;
 	@FindBy(xpath = "//div//a[contains(text(),'Deactivate Employee')]") Button btnDeactivateEmployee;
 	@FindBy(xpath = "//div[@class='panel-heading']//a[contains(text(),'Deactivate')]") Button btnDeactivate;
+	
 	@FindBy(linkText = "Manage") private Link lnkManage;
+	
+	
+	@FindBy(xpath = "//h5[contains(text(),'Current Timesheet')]/../div/div[@class='form-container']/form/div[@class='scrollable']/table") private Webtable tblCurrentTimeSheet;
+	@FindBy(xpath = "//input[@class='time-entry-btn time-entry-submit-button btn btn-primary btn-sm']") private Button btnSubmitCurrentTimeSheet;
+	@FindBy(xpath = "//div[@id='exception-area']") private Element elmExceptions;
+	@FindBy(xpath = "//button[@id='cancelExceptions']") private Button btnExceptionCancel;
+	@FindBy(xpath = "//button[@id='confirmExceptions']") private Button btnExceptionConfirm;
+
 	
 	/**Constructor**/
 	public EmployeePage(OrasiDriver driver){
@@ -74,7 +86,44 @@ public class EmployeePage {
 	}
 	
 	public void clickManage() {
-		lnkManage.click();
+		lnkManage.syncVisible(5);
+		lnkManage.jsClick();
 	}
 	
+	public void submitCurrentTimeSheet() {
+		btnSubmitCurrentTimeSheet.syncVisible(5);
+		btnSubmitCurrentTimeSheet.jsClick();
+	}
+	
+	/**
+	 * Fills the current time sheet with less than 40 hours for the week
+	 * 
+	 * @author Christopher Batts
+	 */
+	public void fillTimeSheetLessThanFortyHours() {
+		List<Element> hourFields = tblCurrentTimeSheet.findElements(By.xpath("//input[@class='time-field time-entry-hour-fields ']"));
+		int count = 0;
+		for (Element element : hourFields) {
+			count ++;
+			if(count < 6) {
+				element.sendKeys("7");
+			}
+		}
+	}
+	
+	/**
+	 * Verifies that exceptions pop-up is displayed. Returns true if displayed, false otherwise.
+	 * @return 
+	 * @author Christopher Batts
+	 */
+	public boolean verifyTimeSheetExceptions() {
+		return elmExceptions.syncVisible(5,false);
+	}
+	
+	public void clickConfirm() {
+		btnExceptionConfirm.syncVisible(5);
+		btnExceptionConfirm.jsClick();
+	}
+	
+
 }

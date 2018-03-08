@@ -33,6 +33,10 @@ public class ReportedTimesSummary {
 	@FindBy(xpath = "//*[@id=\"edit_employee_252\"]/div[4]/input[2]") private Button btnSubmitTimeSheet; 
 	@FindBy(xpath = "//*[@id=\"content\"]/div[6]/table/tbody/tr[3]/td/table") private Webtable tblTimeSheetSubTable;
 	
+	@FindBy(xpath = "//h4[contains(text(),'Timesheets for this week have the following exceptions')]/../../../../../../../tr[@class='time-table']") private Webtable tblTimeSheetWithExceptions;
+	@FindBy(xpath = "//h4[contains(text(),'Edit Time')]/../..//table[@id='time-entry-table']") private Webtable tblEditTimeSheet;
+	@FindBy(xpath = "//h4[contains(text(),'Timesheets for this week have the following exceptions')]") private Element elmTimeSheetExceptions;
+	
 	/**Constructor**/
 	public ReportedTimesSummary(OrasiDriver driver){
 		this.driver = driver;
@@ -95,6 +99,47 @@ public class ReportedTimesSummary {
 		
 		
 		return tblTimeSheetSubTable.findElement(By.xpath("//div[@class = 'tooltip fade top in']")).isDisplayed();
+	}
+	
+	public void clickRecallOnTimeSheetWithExceptions() {
+		Element recall = tblTimeSheetWithExceptions.findElement(By.xpath("//span[@class='approval-section recall-icon glyphicon glyphicon-repeat']"));
+		recall.syncVisible(5);
+		recall.click();
+	
+	}
+	
+	public void clickEditOnTimeSheetWithExceptions() {
+		Element edit = tblTimeSheetWithExceptions.findElement(By.xpath("//span[@class='approval-section edit-icon glyphicon glyphicon-pencil']"));
+		edit.syncVisible(5);
+		edit.click();
+	}
+	
+	public void editTimeSheetToFortyHours() {
+		List<Element> hourFields = tblEditTimeSheet.findElements(By.xpath("//td[@class='time-entry-cell']"));
+		int count = 0;
+		for (Element element : hourFields) {
+			count ++;
+			if(count < 6) {
+				driver.actions().contextClick(element);
+				element.findElement(By.xpath("//div[@class='btn btn-danger btn-xs cancel-comment']")).click();
+				element.sendKeys("8");
+			}
+		}
+	}
+	
+	public void submitEditedTimeSheet() {
+		Element submit = tblEditTimeSheet.findElement(By.xpath("/../..//input[@class='time-entry-btn time-entry-submit-button btn btn-primary btn-sm']"));
+		submit.syncVisible(5);
+		submit.click();
+	}
+	
+	public boolean verifyTimeSheetRefresh() {
+		Webtable timesheet = driver.findWebtable(By.xpath("//td[contains(text(),'Automation Test Engineer (SAP)')]/../../.."));
+		return timesheet.findElement(By.xpath("//td[contains(text(),'Automation Test Engineer (SAP)')]/../td[contains(text(),'40.0')]")).syncVisible(5,false);
+	}
+	
+	public boolean verifyExceptionsExist() {
+		return elmTimeSheetExceptions.syncVisible(5,false);
 	}
 	
 }
