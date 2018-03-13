@@ -1,6 +1,7 @@
 package com.orasi.bluesource;
 
 import java.lang.reflect.UndeclaredThrowableException;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.lang.model.util.Elements;
@@ -374,6 +375,175 @@ public class Accounts {
 	public void selectCell(int row, int column) {
 		tblAccounts.clickCell(row, column);
 		PageLoaded.isDomComplete(driver, 1);
+	}
+	
+	public void clickAccountsTab() {
+		lnkAccountsTab.syncVisible(5);
+		lnkAccountsTab.click();
+	}
+
+	/**
+	 * Traverses all accounts and determines if they have any projects. If a project
+	 * exists, the name of the account is added to a list of Strings.
+	 * 
+	 * @return List<String>, a list of all account names with any projects
+	 * @author Christopher Batts
+	 */
+	public List<String> getAccountsWithProjects() {
+		List<String> accountNames = new ArrayList<String>();
+		int numAccounts = tblAccounts.getRowCount();
+		//go through every account and check for projects
+		for (int i = 2; i < numAccounts; i++) {
+			PageLoaded.isDomComplete(driver, 5);
+			//find account link, get text, and click
+			Element account = tblAccounts.findElement(By.xpath("//a[@class='ng-binding']/../../../tr[" + i + "]/td/a"));
+			String name = account.getText();
+			account.click();
+			PageLoaded.isDomComplete(driver,5);
+			tblProjects.syncVisible(5);
+			//display hidden projects
+			tblProjects.findElement(By.xpath("//th[contains(text(),'Status')]/../../../../div")).click();
+			//get row count of projects table
+			PageLoaded.isDomComplete(driver,5);
+			int numProjects = tblProjects.getRowCount();
+			//find number of hidden projects and subtract from row count
+			int hidProj = findNumHiddenProjects();
+			numProjects -= hidProj;
+			//if project count is still greater than 0, then traverse all non-hidden projects
+			if (numProjects > 0) {
+				boolean foundRole = true;
+				//traverse remaining projects and click
+				for (int k = 1; k < numProjects + 1; k++) {
+					PageLoaded.isDomComplete(driver,5);
+					tblProjects.findElement(By.xpath("//th[contains(text(),'Status')]/../../../../div")).click();
+					PageLoaded.isDomComplete(driver,5);
+					tblProjects.findElement(By.xpath("//tbody/tr["+k+"]")).syncVisible(5);
+					Element project = tblProjects.findElement(By.xpath("//tbody/tr[" + k + "]"));
+					if(!(project.getAttribute("class").equals("sub-project"))) {
+						driver.findElement(By.xpath("//th[contains(text(),'Status')]/../../../tbody/tr[" + k + "]/td/a")).click();
+						//find Roles table and get row count
+						PageLoaded.isDomComplete(driver,5);
+						driver.findWebtable(By.xpath("//th[contains(text(),'Rate')]/../../..")).syncVisible(5);
+						Webtable tblRoles = driver.findWebtable(By.xpath("//th[contains(text(),'Rate')]/../../.."));
+						int numRoles = tblRoles.getRowCount();
+						//if row count of Roles is greater than 0 return true, otherwise return false
+						if (numRoles > 0) {
+							foundRole &= true;
+						} else {
+							foundRole &= false;
+						}
+					}
+					driver.findLink(By.xpath("//div[@class='breadcrumbs']/a[2]")).click();
+					PageLoaded.isDomComplete(driver,5);
+				}
+				//if all projects have roles then add account name to list of Strings
+				if (foundRole == true) {
+					accountNames.add(name);
+				}
+
+			}
+			PageLoaded.isDomComplete(driver,5);
+			clickAccountsTab();
+		}
+		return accountNames;
+	}
+	
+	/**
+	 * Traverses all accounts and determines if they have any projects. If no projects
+	 * exist, the name of the account is added to a list of Strings.
+	 * 
+	 * @return List<String>, a list of all account names without projects
+	 * @author Christopher Batts
+	 */
+	public List<String> getAccountsWithoutProjects() {
+		List<String> accountNames = new ArrayList<String>();
+		int numAccounts = tblAccounts.getRowCount();
+		for (int i = 2; i < (numAccounts-1); i++) {
+			PageLoaded.isDomComplete(driver, 5);
+			//find account link, get text, and click
+			Element account = tblAccounts.findElement(By.xpath("//a[@class='ng-binding']/../../../tr[" + i + "]/td/a"));
+			String name = account.getText();
+			account.click();
+			PageLoaded.isDomComplete(driver,5);
+			tblProjects.syncVisible(5);
+			//display hidden projects
+			tblProjects.findElement(By.xpath("//th[contains(text(),'Status')]/../../../../div")).click();
+			//get row count of projects table
+			PageLoaded.isDomComplete(driver,5);
+			int numProjects = tblProjects.getRowCount();
+			//find number of hidden projects and subtract from row count
+			int hidProj = findNumHiddenProjects();
+			numProjects -= hidProj;
+			
+			if(!(numProjects > 0)) {
+				accountNames.add(name);
+			}
+			PageLoaded.isDomComplete(driver,5);
+			clickAccountsTab();
+			
+		}
+		PageLoaded.isDomComplete(driver,5);
+		return accountNames;
+	}
+
+	/**
+	 * Given a list of account names, this returns true if all accounts appear in
+	 * QuickNav. Returns false otherwise.
+	 * 
+	 * @param names,
+	 *            a list of account names with projects
+	 * @return
+	 * @author Christopher Batts
+	 */
+	public boolean verifyAccountsQuickNavDisplay(List<String> names) {
+		boolean foundAll = true;
+		for (String string : names) {
+			foundAll &= driver
+					.findElement(By.xpath("//div[@class='quick-nav-group']/a[contains(text(),'" + string + "')]"))
+					.isDisplayed();
+		}
+		return foundAll;
+	}
+	
+	/**
+	 * Given a list of account names, this returns true if all accounts do not appear in
+	 * QuickNav. Returns false otherwise.
+	 * 
+	 * @param names,
+	 *            a list of account names without projects
+	 * @return
+	 * @author Christopher Batts
+	 */
+	public boolean verifyAccountsQuickNavNoDisplay(List<String> names) {
+		boolean foundAll = false;
+		for (String string : names) {
+			foundAll |= driver
+					.findElement(By.xpath("//div[@class='quick-nav-group']/a[contains(text(),'" + string + "')]"))
+					.isDisplayed();
+		}
+		return foundAll;
+	}
+	
+	/**
+	 * Finds the number of hidden projects on an account page
+	 * 
+	 * @return Integer, number of hidden projects
+	 * @author Christopher Batts
+	 */
+	public int findNumHiddenProjects() {
+		List<Element> list = tblProjects.findElements(By.xpath("//div[@class='pull-right btn-link view-closed']/span"));
+		String s = "";
+		if (list.size() > 1) {
+			Element x = tblProjects.findElement(By.xpath("//div[@class='pull-right btn-link view-closed']/span[2]"));
+			String str = x.getText();
+			if (!(str.isEmpty())) {
+				int index = str.indexOf("closed") - 1;
+				s = str.substring(0, index);
+			} else {
+				return 0;
+			}
+		}
+		return Integer.parseInt(s);
 	}
 	
 }
