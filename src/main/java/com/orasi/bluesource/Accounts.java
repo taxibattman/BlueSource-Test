@@ -395,7 +395,7 @@ public class Accounts {
 		List<String> accountNames = new ArrayList<String>();
 		int numAccounts = tblAccounts.getRowCount();
 		//go through every account and check for projects
-		for (int i = 2; i < numAccounts; i++) {
+		for (int i = 2; i <= numAccounts; i++) {
 			PageLoaded.isDomComplete(driver, 5);
 			//find account link, get text, and click
 			Element account = tblAccounts.findElement(By.xpath("//a[@class='ng-binding']/../../../tr[" + i + "]/td/a"));
@@ -467,7 +467,7 @@ public class Accounts {
 					.findElement(By.xpath("//div[@class='quick-nav-group']/a[contains(text(),'" + string + "')]"))
 					.isDisplayed();
 		}
-		return true;
+		return foundAll;
 	}
 
 	public int findNumHiddenProjects() {
