@@ -61,13 +61,13 @@ public class AccountsQuickNavAccountNoProjects extends WebBaseTest{
     	header.navigateAccounts();
     	
     	TestReporter.logStep("Get all accounts without projects");
-    	List<String> accountNames = accounts.getAccountsWithProjects();
+    	List<String> accountNames = accounts.getAccountsWithoutProjects();
     	
     	TestReporter.logStep("Open Quick Nav");
     	accounts.clickQuickNav();
     	
     	TestReporter.logStep("Verify accounts don't appear in quick nav");
-    	TestReporter.assertTrue(accounts.verifyAccountsQuickNavDisplay(accountNames), "Verify account do not appear in Quick Nav");
+    	TestReporter.assertFalse(accounts.verifyAccountsQuickNavNoDisplay(accountNames), "Verify account do not appear in Quick Nav");
     	
     	TestReporter.logStep("Close Quick Nav");
     	accounts.closeQuickNav();
