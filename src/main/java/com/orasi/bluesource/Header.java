@@ -19,7 +19,12 @@ public class Header {
 	@FindBy(xpath = "//li[contains(.,'Employees')]/a") private Link lnkEmployees;
 	@FindBy(xpath = "//a[contains(text(),'Project')]") private Link lnkProjemployees;
 	@FindBy(xpath = "//a[contains(text(),'Project')]//..//..//..//following-sibling::a") private Link lnkEmployeeSelector;
+
 	@FindBy(partialLinkText = "Message Center") private Link lnkMessageCenter;
+
+	@FindBy(linkText = "Admin") private Link lnkAdmin;
+	@FindBy(linkText = "Timesheet Locks") private Link lnkTimesheetLocks;
+
 	
 	/**Constructor**/
 	public Header(OrasiDriver driver){
@@ -101,4 +106,10 @@ public class Header {
 		lnkEmployees.jsClick();
 	}
 
+	public void navigateTimesheetLocks() {
+		MessageCenter messageCenter = new MessageCenter(driver);
+		messageCenter.closeMessageCenter();
+		lnkAdmin.click();
+		lnkTimesheetLocks.click();
+	}
 }
